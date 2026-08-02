@@ -38,3 +38,30 @@ def test_save_without_loading_template_raises_runtime_error(tmp_path: Path) -> N
     # Act & Assert
     with pytest.raises(RuntimeError):
         generator.save(output_path)
+
+def test_replace_placeholders_updates_document_text() -> None:
+    # Arrange
+    template_path = Path(__file__).parent / "resources" / "sample_placeholder_invoice.docx"
+    generator = InvoiceGenerator(template_path)
+    generator.load_template()
+    invoice_data = {
+        "CLIENT_NAME": "Acme Pty Ltd"
+    }
+
+    # Act
+    generator.replace_placeholders(invoice_data)
+
+    # Assert
+    assert generator.document.paragraphs[0].text == "Hello Acme Pty Ltd"
+
+def test_replace_placeholders_without_loaded_document_raises_runtime_error() -> None:
+    # Arrange
+    template_path = Path(__file__).parent / "resources" / "sample_placeholder_invoice.docx"
+    generator = InvoiceGenerator(template_path)
+    invoice_data = {
+        "CLIENT_NAME": "Acme Pty Ltd"
+    }
+
+    # Act & Assert
+    with pytest.raises(RuntimeError):
+        generator.replace_placeholders(invoice_data)

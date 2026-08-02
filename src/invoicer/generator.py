@@ -26,6 +26,24 @@ class InvoiceGenerator:
             RuntimeError: if no template is loaded.
         """
         if self.document is None:
-            raise RuntimeError("Cannot save invoice because no template has been loaded.")
+            raise RuntimeError("No document loaded. Call load_template() before saving.")
 
         self.document.save(output_path)
+
+    def replace_placeholders(self, invoice_data: dict[str,str]) -> None:
+        """
+        Replace placeholders in the loaded template with actual invoice data.
+
+        Args:
+            invoice_data: A dictionary containing placeholder keys and their corresponding values.
+        Raises:
+            RuntimeError: if no template is loaded.
+        """
+        if self.document is None:
+            raise RuntimeError("No document loaded. Call load_template() before replacing placeholders.")
+
+        for paragraph in self.document.paragraphs:
+            for key, value in invoice_data.items():
+                placeholder = "{{" + key + "}}"
+                if placeholder in paragraph.text:
+                    paragraph.text = paragraph.text.replace(placeholder, value)
