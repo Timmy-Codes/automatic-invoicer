@@ -6,7 +6,7 @@ from invoicer.generator import InvoiceGenerator
 def test_load_valid_template() -> None:
     # Arrange - what we need to set up for the test
     template_path = Path(__file__).parent / "resources" / "sample_invoice.docx"
-    generator = InvoiceGenerator(template_path)
+    generator = InvoiceGenerator(str(template_path))
 
     # Act - what we are testing
     generator.load_template()
@@ -17,12 +17,12 @@ def test_load_valid_template() -> None:
 def test_save_loaded_template_creates_docx_file(tmp_path: Path) -> None:
     # Arrange
     template_path = Path(__file__).parent / "resources" / "sample_invoice.docx"
-    generator = InvoiceGenerator(template_path)
+    generator = InvoiceGenerator(str(template_path))
     generator.load_template()
     output_path = tmp_path / "output_invoice.docx"
 
     # Act
-    generator.save(output_path)
+    generator.save(str(output_path))
 
     # Assert
     assert output_path.exists()
@@ -32,9 +32,9 @@ def test_save_loaded_template_creates_docx_file(tmp_path: Path) -> None:
 def test_save_without_loading_template_raises_runtime_error(tmp_path: Path) -> None:
     # Arrange
     template_path = Path(__file__).parent / "resources" /"sample_invoice.docx"
-    generator = InvoiceGenerator(template_path)
+    generator = InvoiceGenerator(str(template_path))
     output_path = tmp_path / "output_invoice.docx"
 
     # Act & Assert
     with pytest.raises(RuntimeError):
-        generator.save(output_path)
+        generator.save(str(output_path))
