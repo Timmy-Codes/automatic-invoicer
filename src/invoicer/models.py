@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date
 from decimal import Decimal
 
@@ -11,4 +11,8 @@ class InvoiceData:
     description: str
     unit_price: Decimal
     quantity: int
-    total: Decimal
+
+    @property
+    def total(self) -> Decimal:
+      # Calculate the total
+      return self.unit_price * Decimal(self.quantity)
